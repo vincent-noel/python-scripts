@@ -13,6 +13,6 @@ SVG.enable true
 full_data.interval 120
 SVG.interval 120
 virion_assembly_rate 0.01
-#
+# 2nd run: just change value of virion_assembly_rate
 folder  run2 
 virion_assembly_rate 0.02
