@@ -7,11 +7,11 @@
 # 1st run: all param values apply to future runs unless changed
 folder  run1 
 omp_num_threads 4
-max_time 120
+max_time 7200
 full_data.enable true
 SVG.enable true
-full_data.interval 30
-SVG.interval 30
+full_data.interval 120
+SVG.interval 120
 virion_assembly_rate 0.01
 #
 folder  run2 
