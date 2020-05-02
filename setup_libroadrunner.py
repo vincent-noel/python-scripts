@@ -13,16 +13,24 @@ import tarfile
 import zipfile
 
 os_type = platform.system()
-print('os_type = ',os_type)
+print('operating system = ',os_type)
 
 # Assume Windows
-rr_file = "roadrunner-win64-vs14-cp35m.zip"
-url = "https://sourceforge.net/projects/libroadrunner/files/libroadrunner-1.4.18/" + rr_file + "/download"
+rr_file = ""
+url = ""
 
-if os_type == 'Darwin':
+if os_type.lower() == 'darwin':
     rr_file = "roadrunner-osx-10.9-cp36m.tar.gz"
     url = "https://sourceforge.net/projects/libroadrunner/files/libroadrunner-1.4.18/" + rr_file + "/download"
-#elif os_type == 'Windows':
+elif os_type.lower().startswith("win"):
+    rr_file = "roadrunner-win64-vs14-cp35m.zip"
+    url = "https://sourceforge.net/projects/libroadrunner/files/libroadrunner-1.4.18/" + rr_file + "/download"
+elif os_type.lower().startswith("linux"):
+    rr_file = "cpplibroadrunner-1.3.0-linux_x86_64.tar.gz"
+    url = "https://sourceforge.net/projects/libroadrunner/files/libroadrunner-1.3/" + rr_file + "/download"
+else:
+    print("Your operating system seems to be unsupported. Please submit a ticket at https://sourceforge.net/p/physicell/tickets/ ")
+    sys.exit(1)
 
 fname = url.split('/')[-2]
 
@@ -63,10 +71,10 @@ print(url)
 my_file = os.path.join(dir_name, fname)
 print('my_file = ',my_file)
 
-if os_type == 'Darwin':
-    rrlib_dir = my_file[:-7]
-elif os_type == 'Windows':
+if os_type.lower().startswith("win"):
     rrlib_dir = my_file[:-4]
+else:  # darwin or linux
+    rrlib_dir = my_file[:-7]
 print('rrlib_dir = ',rrlib_dir)
 
 def download_cb(blocknum, blocksize, totalsize):
@@ -85,21 +93,20 @@ urllib.request.urlretrieve(url, my_file, download_cb)
 
 os.chdir(dir_name)
 print('installing (uncompressing) the file...')
-if os_type == 'Darwin':
+if os_type.lower().startswith("win"):
+    try:
+        with zipfile.ZipFile(rr_file) as zf:
+            zf.extractall('.')
+    except:
+        print('error unzipping the file')
+        exit(1)
+else:  # Darwin or Linux
     try:
         tar = tarfile.open(rr_file)
         tar.extractall()
         tar.close()
     except:
         print('error untarring the file')
-        exit(1)
-#elif os_type == 'Darwin':
-elif os_type == 'Windows':
-    try:
-        with zipfile.ZipFile(rr_file) as zf:
-            zf.extractall('.')
-    except:
-        print('error unzipping the file')
         exit(1)
 
 print('Done.\n')
