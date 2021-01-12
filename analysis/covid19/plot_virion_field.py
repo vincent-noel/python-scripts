@@ -38,5 +38,6 @@ f = np.array([ (mcds[idx].get_concentrations('virion')).sum()  for idx in range(
 
 plt.plot(tval,f)
 plt.title(data_dir + ": virion field (sum)")
+plt.xlabel("time (mins)")
 #plt.savefig(data_dir + '.png')
 plt.show()

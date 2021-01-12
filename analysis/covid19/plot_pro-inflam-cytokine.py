@@ -38,5 +38,6 @@ f = np.array([ (mcds[idx].get_concentrations('pro-inflammatory cytokine')).sum()
 
 plt.plot(tval,f)
 plt.title(data_dir + ": pro-inflammatory cytokine field (sum)")
+plt.xlabel("time (mins)")
 #plt.savefig(data_dir + '.png')
 plt.show()
