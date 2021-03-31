@@ -56,7 +56,7 @@ def create_plot(snapshot, folder, output_folder='.', output_plot=True, show_plot
     
     ###### Flags ######
 
-    produce_for_panel = False
+    produce_for_panel = True
     
     ####################################################################################################################
     ####################################            Load data                                   ########################
@@ -175,8 +175,8 @@ def create_plot(snapshot, folder, output_folder='.', output_plot=True, show_plot
 
     if produce_for_panel == False:
 
-        ax.set_xlabel('x [micron]')
-        ax.set_ylabel('y [micron]')
+        ax.set_xlabel('microns')
+        ax.set_ylabel('microns')
         fig.colorbar(cs, ax=ax)
         plt.title(snapshot)
         # Carefully place the command to make the plot square AFTER the color bar has been added.

@@ -46,16 +46,18 @@ def plot_cell_tracks(starting_index: int, sample_step_interval: int, number_of_s
         Save plot flag (required to produce a movie from resulting images)
     show_plot :
         Show plot flag (for processing many images in a loop, this should likely be set to false. Images have to be closed manually)
-        produce_for_panel :
+    produce_for_panel :
             Flag - calls tight_layout, increases axes font sizes, and plots without title. For using in panels of images where there will be captions.
     Returns
     -------
     Null :
         Produces a png image from the input PhysiCell SVGs.
+
     """
 
     output_plot = output_plot
     show_plot = show_plot
+    produce_for_panel = True
 
     d={}   # dictionary to hold all (x,y) positions of cells
     d_attributes = {}   #dictionary to hold other attributes, like color (a data frame might be nice here in the long run ... ) \
@@ -182,9 +184,18 @@ def plot_cell_tracks(starting_index: int, sample_step_interval: int, number_of_s
                 # Pull out the cell's location. If ID not already in stack to track, put in new cell in dictionary while applying coordinate transform.
                 if (child.attrib['id'] in d.keys()):
                     d[child.attrib['id']] = np.vstack((d[child.attrib['id']], [ float(circle.attrib['cx'])-x_coordinate_transform, float(circle.attrib['cy'])-y_coordinate_transform ]))
+                #### Comment out this else to produce single cell tracks
                 else:
                     d[child.attrib['id']] = np.array( [ float(circle.attrib['cx'])-x_coordinate_transform, float(circle.attrib['cy'])-y_coordinate_transform])
                     d_attributes[child.attrib['id']] = circle.attrib['fill']
+
+                ###### Uncomment this elif and else to produce single cell tracks
+                # elif (child.attrib['id'] == 'cell24'):
+                #     d[child.attrib['id']] = np.array( [ float(circle.attrib['cx'])-x_coordinate_transform, float(circle.attrib['cy'])-y_coordinate_transform])
+                #     d_attributes[child.attrib['id']] = circle.attrib['fill']
+                # else:
+                #     break
+
                 ##### This 'break' statement is required to skip the nucleus circle. There are two circle attributes. \
                 ##### If both nuclear and cell boundary attributes are needed, this break NEEDS REMOVED!!!!
                 break
@@ -246,14 +257,14 @@ def plot_cell_tracks(starting_index: int, sample_step_interval: int, number_of_s
             plt.quiver(x[:-1], y[:-1], x[1:] - x[:-1], y[1:] - y[:-1], scale_units='xy', angles='xy', scale=1, minlength = 0.001, headwidth=1.5, headlength=4)
 
             #### Plot final cell position. MAY NOT TAKE RGB VALUES!!!
-            plt.scatter(x[-1],y[-1], s = 4.5, c = d_attributes[key])
+            plt.scatter(x[-1], y[-1], s=85.0, c=d_attributes[key], alpha=0.7)
 
         #### used if history lenght is set to 0 and if in first frame of sequnece (there is no history)
         elif (len(d[key].shape) == 1):
             x = d[key][0]
             y = d[key][1]
             #### Plot final cell position. MAY NOT TAKE RGB VALUES!!!
-            plt.scatter(x, y, s = 4.5, c = d_attributes[key])
+            plt.scatter(x, y, s=85.0, c=d_attributes[key], alpha=0.7)
             # plt.scatter(x, y, s=3.5, c=)
 
         else:
@@ -266,12 +277,16 @@ def plot_cell_tracks(starting_index: int, sample_step_interval: int, number_of_s
     if produce_for_panel == False:
         title_str = "History from image " + str(starting_index) + " to image " + str(endpoint) + "; " + title_str
         # %"Starting at frame {}, sample interval of {} for {} total samples".format(number_of_samples, sample_step_interval, number_of_samples)
+        ax.set_xlabel('microns')
+        ax.set_ylabel('microns')
         plt.title(title_str)
     else:
-        fig.tight_layout()
+        
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-
+        ax.set_xlabel('microns', fontsize=20)
+        ax.set_ylabel('microns', fontsize=20)
+        fig.tight_layout()
     # could change to the custom in the movie output or some other more better output if desired.
     output_folder = ''
     snapshot = str(starting_index) + '_' + str(sample_step_interval) + '_' + str(number_of_samples)
