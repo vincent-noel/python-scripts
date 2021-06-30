@@ -45,7 +45,10 @@ with open(params_file) as f:
         if (line[0] == '#'):
             continue
         (key, val) = line.split()
-        if (key == 'run_it'):
+
+        if (key == 'sequential'):
+            sequential_flag = int(val)  # if =1, do runs sequentially, i.e., not in background
+        elif (key == 'run_it'):
             # write the config file to the previous folder (output) dir and start a simulation
             print('\n\n---> write config file (and start sim): ', xml_file_out)
             tree.write(xml_file_out)   # will create folder_name/config.xml
