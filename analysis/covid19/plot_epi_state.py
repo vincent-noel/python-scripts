@@ -44,7 +44,9 @@ plt.plot(tval, y_infected, label='infected', linewidth=2)
 plt.plot(tval, y_dead, label='dead', linewidth=2)
 
 plt.legend(loc='center left', prop={'size': 10})
-
+plt.xticks([1440,2*1440, 3*1440, 4*1440, 5*1440, 6*1440, 7*1440, 8*1440, 9*1440, 10*1440], ('1', '2','3','4','5','6','7','8','9','10'))
 plt.title(data_dir)
-#plt.savefig(data_dir + '.png')
+plt.xlabel('Time (days)')
+plt.ylabel('Number of cells')
+plt.savefig(data_dir + '.png')
 plt.show()
